@@ -5,12 +5,13 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <cmath>
 
 using namespace std;
 
 struct bucket{
     int prof_local;
-    int chaves[5]; //array com as entradas
+    int chaves[5];
     int qtd_chaves;
 };
 
@@ -23,12 +24,12 @@ class Hash_Extensivel{
     public:
         Hash_Extensivel();
 
-        int calcular_hash(int chave);
-        void inicializar_diretorio(int pg_inicial);
+        int calcular_hash(int chave); //retornar os PG bits menos significativos
+        void inicializar_diretorio(int pg_inicial); //recebe a PG e cria os buckets (.txt)
 
-        void buscar(int chave, ofstream& arquivoSaida);
-        void inserir(int chave, ofstream& arquivoSaida);
-        void remover(int chave, ofstream& arquivoSaida);
+        void buscar(int chave, ofstream& arquivo_saida);
+        void inserir(int chave, ofstream& arquivo_saida);
+        void remover(int chave, ofstream& arquivo_saida);
     
     private:
         diretorio dir;
