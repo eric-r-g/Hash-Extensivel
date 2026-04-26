@@ -87,6 +87,115 @@ void Hash_Extensivel::buscar(int chave, ofstream& arquivo_saida){
     arquivo_saida << "BUS:" << chave << "/" << qtde << "\n";
 }
 
+
+void Hash_Extensivel::inserir(int chave, ofstream& arquivo_saida){
+    bool inserted = false;
+    while(!inserted){
+        int idx = calcular_hash(chave);
+
+        string nome = dir.ponteiros[idx];
+        ifstream arquivo(nome);
+
+        if(arquivo.is_open()){
+            //instancia o bucket e le os dados do txt
+            bucket b; 
+            arquivo >> b.prof_local;
+            arquivo >> b.qtd_chaves;
+            for(int i = 0; i < 5; i++) {
+                arquivo >> b.chaves[i];
+            }
+
+            if(b.qtd_chaves < 5) { // existe espaço naquele bucket
+                b.chaves[b.qtd_chaves] = chave;
+                b.qtd_chaves++;
+                inserted = true;
+
+                ofstream arquivo(nome);
+
+                if(arquivo.is_open()){
+                    arquivo << b.prof_local << "\n";
+                    arquivo << b.qtd_chaves << "\n";
+                    for(int i = 0 ; i < 5 ; i++)
+                        arquivo << -1 << " ";
+
+                    arquivo.close();
+                }
+                else cerr << "Erro ao abrir arquivo: " << nome << endl;
+            } else { 
+                // aumenta a profundidade local
+                if(b.prof_local == dir.prof_global){ 
+                    // aumenta a profundidade global
+                    dir.prof_global++;
+                    int new_size = (1 << dir.prof_global);
+                    
+                    dir.ponteiros.resize(new_size);
+                    for(int idx_pont = new_size / 2; idx_pont < new_size; idx_pont++){
+                        dir.ponteiros[idx_pont] = dir.ponteiros[idx_pont - new_size / 2];
+                    }
+                }
+
+                b.prof_local++;
+                vector <int> idx_originais, idx_transferidos;
+                for(int i = 0; i < b.qtd_chaves; i++){
+                    if(b.chaves[i] & (1 << (b.prof_local - 1))) {
+                        idx_transferidos.push_back(b.chaves[i]);
+                    } else {
+                        idx_originais.push_back(b.chaves[i]);
+                    }
+                }
+
+                ofstream arquivo(nome);
+
+                if(arquivo.is_open()){
+                    arquivo << b.prof_local << "\n";
+                    arquivo << idx_originais.size() << "\n";
+                    for(int i = 0 ; i < 5 ; i++){
+                        if(i < idx_originais.size()) arquivo << idx_originais[i] << " ";
+                        else arquivo << -1 << " ";
+                    }
+
+                    arquivo.close();
+                }
+                else cerr << "Erro ao abrir arquivo: " << nome << endl;
+
+                string new_nome = "bucket_" + to_string(idx + (1 << (b.prof_local - 1))) + ".txt";
+
+                arquivo = ofstream(new_nome);
+
+                if(arquivo.is_open()){
+                    arquivo << b.prof_local << "\n";
+                    arquivo << idx_transferidos.size() << "\n";
+                    for(int i = 0 ; i < 5 ; i++){
+                        if(i < idx_transferidos.size()) arquivo << idx_transferidos[i] << " ";
+                        else arquivo << -1 << " ";
+                    }
+
+                    arquivo.close();
+                }
+                else cerr << "Erro ao abrir arquivo: " << nome << endl;
+            }
+
+            arquivo.close();
+        } else {
+            // cria o bucket necessario e faz as devidas mudanças
+            ofstream arquivo(nome);
+
+            if(arquivo.is_open()){
+                arquivo << dir.prof_global << "\n";
+                arquivo << 1 << "\n";
+                arquivo << chave << " ";
+                for(int i = 1 ; i < 5 ; i++){
+                    arquivo << -1 << " ";
+                }
+
+                arquivo.close();
+            }
+            else cerr << "Erro ao abrir arquivo: " << nome << endl;
+        }
+    }
+    arquivo_saida << "INC:" << chave << "/<" << ">\n";
+}
+
 void Hash_Extensivel::remover(int chave, ofstream& arquivo_saida){
     //encontrar e abrir o arquivo do bucket
     int idx = calcular_hash(chave);
@@ -132,3 +241,4 @@ void Hash_Extensivel::remover(int chave, ofstream& arquivo_saida){
     //escrever no out.txt REM:x/<qtd de tuplas removidas>,<profundidade global>,<profundidade local>
     arquivo_saida << "REM:" << chave << "/" << removidas << "," << dir.prof_global << "," << b.prof_local << "\n";
 }
+
