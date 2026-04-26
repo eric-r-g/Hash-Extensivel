@@ -68,3 +68,49 @@ void Hash_Extensivel::buscar(int chave, ofstream& arquivo_saida){
     //escrever no out.txt (BUS:x/<quantidade de tuplas selecionadas>)
     arquivo_saida << "BUS:" << chave << "/<" << qtde << ">\n";
 }
+
+void Hash_Extensivel::remover(int chave, ofstream& arquivo_saida){
+    //encontrar e abrir o arquivo do bucket
+    int idx = calcular_hash(chave);
+    string nome = dir.ponteiros[idx];
+
+    ifstream arquivo(nome);
+
+    //carregar na memoria
+    bucket b;
+    if(arquivo.is_open()){
+        arquivo >> b.prof_local >> b.qtd_chaves;
+        for(int i = 0 ; i < 5 ; i++) arquivo >> b.chaves[i];
+        arquivo.close();
+    }
+    else cerr << "Erro ao abrir arquivo" << nome << endl;
+
+    //procurar e remover as tuplas com a chave
+    int removidas = 0;
+    for(int i = 0 ; i < b.qtd_chaves ; i++){
+        if(b.chaves[i] == chave){
+            //mudar a posicao das chaves no array (1 pra tras)
+            for(int j = i ; j < b.qtd_chaves - 1 ; j++)
+                b.chaves[j] = b.chaves[j+1];
+            b.chaves[b.qtd_chaves - 1] = -1; //resetar a ultima
+
+            b.qtd_chaves--;
+            removidas++;
+        }
+    }
+
+    //salvar o bucket no disco (sobrescrever o outro arquivo)
+    ofstream arquivo_novo(nome);
+    if(arquivo_novo.is_open()){
+            arquivo_novo << b.prof_local << "\n";
+            arquivo_novo << b.qtd_chaves << "\n";
+            for(int i = 0 ; i < 5 ; i++)
+                arquivo_novo << b.chaves[i] << " ";
+
+            arquivo_novo.close();
+        }
+    else cerr << "Erro ao tentar sobrescrever: " << nome << endl;
+
+    //escrever no out.txt REM:x/<qtd de tuplas removidas>,<profundidade global>,<profundidade local>
+    arquivo_saida << "REM:" << chave << "/<" << removidas << ">,<" << dir.prof_global << ">,<" << b.prof_local << ">\n";
+}
