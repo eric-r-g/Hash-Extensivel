@@ -26,6 +26,7 @@ class Hash_Extensivel{
 
         int calcular_hash(int chave); //retornar os PG bits menos significativos
         void inicializar_diretorio(int pg_inicial); //recebe a PG e cria os buckets (.txt)
+        int get_PG();
 
         void buscar(int chave, ofstream& arquivo_saida);
         void inserir(int chave, ofstream& arquivo_saida);

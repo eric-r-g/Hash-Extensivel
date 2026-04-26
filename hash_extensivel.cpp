@@ -4,6 +4,10 @@ Hash_Extensivel::Hash_Extensivel(){
     dir.prof_global = 0;
 }
 
+int Hash_Extensivel::get_PG(){
+    return dir.prof_global;
+}
+
 void Hash_Extensivel::inicializar_diretorio(int PG){
     dir.prof_global = PG;
     int num_buckets = pow(2, PG);
