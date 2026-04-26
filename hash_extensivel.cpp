@@ -84,7 +84,7 @@ void Hash_Extensivel::buscar(int chave, ofstream& arquivo_saida){
     }
 
     //escrever no out.txt (BUS:x/<quantidade de tuplas selecionadas>)
-    arquivo_saida << "BUS:" << chave << "/<" << qtde << ">\n";
+    arquivo_saida << "BUS:" << chave << "/" << qtde << "\n";
 }
 
 void Hash_Extensivel::remover(int chave, ofstream& arquivo_saida){
@@ -130,5 +130,5 @@ void Hash_Extensivel::remover(int chave, ofstream& arquivo_saida){
     else cerr << "Erro ao tentar sobrescrever: " << nome << endl;
 
     //escrever no out.txt REM:x/<qtd de tuplas removidas>,<profundidade global>,<profundidade local>
-    arquivo_saida << "REM:" << chave << "/<" << removidas << ">,<" << dir.prof_global << ">,<" << b.prof_local << ">\n";
+    arquivo_saida << "REM:" << chave << "/" << removidas << "," << dir.prof_global << "," << b.prof_local << "\n";
 }
