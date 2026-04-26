@@ -29,7 +29,7 @@ void Hash_Extensivel::inicializar_diretorio(int PG){
 
             arquivo.close();
         }
-        else cerr << "Erro ao abrir arquivo: " << nome << endl;
+        else cerr << "Erro ao criar arquivo: " << nome << endl;
     }
 }
 
@@ -64,6 +64,24 @@ void Hash_Extensivel::buscar(int chave, ofstream& arquivo_saida){
         arquivo.close();
     }
     else cerr << "Erro ao abrir arquivo" << nome << endl;
+
+    //imprimir linha do texto original
+    if(qtde > 0){
+        ifstream ArquivoTexto("bd-trab2 - dataset.csv");
+        if(ArquivoTexto.is_open()){
+            string LinhaTexto;
+            int LinhaAtual = 0;
+            while(getline(ArquivoTexto, LinhaTexto)){
+                if(LinhaAtual == chave){
+                    cout << "Chave: " << chave << ", Conteudo: " << LinhaTexto << endl;
+                    break;
+                }
+                LinhaAtual++;
+            }
+            ArquivoTexto.close();
+        }
+        else cerr << "Erro ao abrir arquivo bd-trab2 - dataset.csv" << endl;
+    }
 
     //escrever no out.txt (BUS:x/<quantidade de tuplas selecionadas>)
     arquivo_saida << "BUS:" << chave << "/<" << qtde << ">\n";
@@ -102,13 +120,13 @@ void Hash_Extensivel::remover(int chave, ofstream& arquivo_saida){
     //salvar o bucket no disco (sobrescrever o outro arquivo)
     ofstream arquivo_novo(nome);
     if(arquivo_novo.is_open()){
-            arquivo_novo << b.prof_local << "\n";
-            arquivo_novo << b.qtd_chaves << "\n";
-            for(int i = 0 ; i < 5 ; i++)
-                arquivo_novo << b.chaves[i] << " ";
+        arquivo_novo << b.prof_local << "\n";
+        arquivo_novo << b.qtd_chaves << "\n";
+        for(int i = 0 ; i < 5 ; i++)
+            arquivo_novo << b.chaves[i] << " ";
 
-            arquivo_novo.close();
-        }
+        arquivo_novo.close();
+    }
     else cerr << "Erro ao tentar sobrescrever: " << nome << endl;
 
     //escrever no out.txt REM:x/<qtd de tuplas removidas>,<profundidade global>,<profundidade local>
