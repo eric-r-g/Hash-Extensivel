@@ -5,8 +5,8 @@
 - Paulo Eduardo Conrado Marinho
 
 ## Descrição do Projeto
-Esse projeto implementa um indide Hash Extensivel em C++ que realiza operações de busca, inserção e remoção
-de registro de um banco de dados. O projeto é Composto de uma classe principal, o hash_extensivel.cpp que
+Esse projeto implementa um índide Hash Extensivel em C++ que realiza operações de busca, inserção e remoção
+de registro de um banco de dados. O projeto é composto de uma classe principal, o hash_extensivel.cpp que
 implementa as funcionalidades do indice Hash e pela main que atua como comunicação entre a entrada e a classe.
 
 A estrutura utiliza o identificador único da linha (`LinhaNum`) como chave de busca e RID e os buckets são mantidos
@@ -28,5 +28,5 @@ No Linux/macOS:
 No Windows:
 > hash.exe
 
-o programa vai ler o in.txt e gerá um arquivo out.txt com as respostas devidas, além de escrever no terminal qualquer aviso
-ou mensagem adicional.
+o programa vai ler o in.txt e gerá um arquivo out.txt com as respostas devidas, além de escrever no terminal 
+qualquer aviso ou mensagem adicional necessária.
