@@ -3,15 +3,19 @@
 int main() {
     Hash_Extensivel hash;
 
-    ifstream entrada("in.txt");
-    ofstream saida("out.txt");
+    ifstream entrada("../in.txt");
+    ofstream saida("../out.txt");
+
+    cout << "--------------------------------------------------------------------" << endl;
 
     if (!entrada.is_open()) {
         cerr << "Erro ao abrir o ficheiro in.txt" << endl;
+        cout << "--------------------------------------------------------------------" << endl;
         return 1;
     }
     if (!saida.is_open()) {
         cerr << "Erro ao criar o ficheiro out.txt" << endl;
+        cout << "--------------------------------------------------------------------" << endl;
         return 0;
     }
 
@@ -30,11 +34,11 @@ int main() {
         }
         else if(linha[0] == 'R'){
             int chave = stoi(linha.substr(4));
-            hash.inserir(chave, saida);
+            hash.remover(chave, saida);
         }
         else{
             int chave = stoi(linha.substr(5));
-            hash.inserir(chave, saida);
+            hash.buscar(chave, saida);
         }
     }
     //P:/<profundidade global final>
@@ -43,6 +47,8 @@ int main() {
     entrada.close();
     saida.close();
 
+    
     cout << "Operacoes Realizadas!" << endl;
+    cout << "--------------------------------------------------------------------" << endl;
     return 0;
 }

@@ -15,7 +15,7 @@ void Hash_Extensivel::inicializar_diretorio(int PG){
 
     //criar os arquivos dos buckets
     for(int i = 0 ; i < num_buckets ; i++){
-        string nome = "bucket_" + to_string(i+1) + ".txt";
+        string nome = "buckets/bucket_" + to_string(i+1) + ".txt";
         dir.ponteiros[i] = nome;
 
         ofstream arquivo(nome);
@@ -71,13 +71,14 @@ void Hash_Extensivel::buscar(int chave, ofstream& arquivo_saida){
 
     //imprimir linha do texto original
     if(qtde > 0){
-        ifstream ArquivoTexto("bd-trab2 - dataset.csv");
+        ifstream ArquivoTexto("../bd-trab2 - dataset.csv");
         if(ArquivoTexto.is_open()){
             string LinhaTexto;
             int LinhaAtual = 0;
             while(getline(ArquivoTexto, LinhaTexto)){
                 if(LinhaAtual == chave){
                     cout << "Chave: " << chave << ", Conteudo: " << LinhaTexto << endl;
+                    cout << "--------------------------------------------------------------------" << endl;
                     break;
                 }
                 LinhaAtual++;
@@ -159,7 +160,7 @@ void Hash_Extensivel::inserir(int chave, ofstream& arquivo_saida){
             else cerr << "Erro ao abrir arquivo: " << nome << endl;
 
             int new_idx = idx % (1 << (b.prof_local - 1)) + (1 << (b.prof_local - 1));
-            string new_nome = "bucket_" + to_string(new_idx) + ".txt";
+            string new_nome = "buckets/bucket_" + to_string(new_idx) + ".txt";
             for(int i = 0; i < (1 << dir.prof_global); i++){
                 if(i % (1 << b.prof_local) == new_idx)
                     dir.ponteiros[i] = new_nome;
